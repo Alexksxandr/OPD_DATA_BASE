@@ -4,8 +4,9 @@ from django.db import models
 from pytils.translit import slugify
 from uuid import uuid4
 from django.core.exceptions import ValidationError
-from django.db.models.functions import Substr, Concat
-from django.db.models import F
+from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.validators import UnicodeUsernameValidator
+from django.contrib.auth.hashers import make_password
 
 
 def article_directory_path(instance, filename):
@@ -28,20 +29,25 @@ class Account(AbstractUser):
         (AUTHOR, 'Author'),
         (ROOT, 'Root'),
     )
-    role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, blank=True,
-                                            null=True)
+
+    username_validator = UnicodeUsernameValidator()
+
+    role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES,
+                                            default=1)
     email = models.EmailField('Электронная почта', unique=True)
-    username = models.CharField('Имя пользователя', max_length=20, unique=True)
-    first_name = models.CharField('Имя', max_length=50)
-    second_name = models.CharField('Фамилия', max_length=50)
-    third_name = models.CharField('Отчество', max_length=50, blank=True,
+    username = models.CharField('Имя пользователя', unique=True,
+                                max_length=150,
+                                validators=[username_validator],
+                                error_messages={
+                                    "unique": _(
+                                        "A user with that username already \
+exists."),
+                                }, )
+    first_name = models.CharField('Имя', max_length=150)
+    last_name = models.CharField('Фамилия', max_length=150)
+    third_name = models.CharField('Отчество', max_length=150, blank=True,
                                   null=True)
-    fullname = models.GeneratedField(
-        expression=Concat('second_name', models.Value(' '), 'first_name',
-                          models.Value(' '), 'third_name'),
-        output_field=models.CharField(max_length=152),
-        db_persist=True
-    )
+    fullname = models.CharField(max_length=452)
 
     USERNAME_FIELD = 'username'
     EMAIL_FIELD = 'email'
@@ -50,6 +56,11 @@ class Account(AbstractUser):
     def __str__(self):
         return self.username
 
+    def save(self, *args, **kwargs):
+        self.fullname = f"{self.last_name} {self.first_name} \
+{self.third_name}" if self.third_name else f"{self.last_name} \
+{self.first_name}"
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Аккаунт'
@@ -84,10 +95,12 @@ class Article(models.Model):
     def save(self, *args, **kwargs):
         if self.slug == '':
             self.slug = slugify(
-                f'{self.title}-by-{self.author.fullname}--{uuid4().hex[:4]}')
+                f'{self.title}-b\
+y-{self.author.fullname}--{uuid4().hex[:4]}')
             while Article.objects.filter(slug=self.slug).exists():
                 self.slug = slugify(
-                    f'{self.title}-by-{self.author.fullname}--{uuid4().hex[:4]}')
+                    f'{self.title}-b\
+y-{self.author.fullname}--{uuid4().hex[:4]}')
         super().save(*args, **kwargs)
 
     class Meta:
