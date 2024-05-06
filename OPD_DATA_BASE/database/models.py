@@ -6,7 +6,6 @@ from uuid import uuid4
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.validators import UnicodeUsernameValidator
-from django.contrib.auth.hashers import make_password
 
 
 def article_directory_path(instance, filename):
