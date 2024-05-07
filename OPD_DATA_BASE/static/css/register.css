@@ -1,0 +1,25 @@
+.form-signup .form-floating {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: start;
+    flex-direction: column;
+}
+
+.form-signup .form-floating input[type="text"],
+.form-signup .form-floating input[type="email"],
+.form-signup .form-floating input[type="password"] {
+    margin-left: 13px;
+    width: 30%;
+    height: 30px;
+    font-size: 16px;
+
+}
+
+.form-floating {
+    height: 50px;
+}
+
+.form-signup .btn-primary {
+    margin-top: 20px;
+    font-size: 16px;
+}

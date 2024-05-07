@@ -4,3 +4,4 @@ __pycache__/
 user_*/
 migrations/
 /.venv/
+static_root/
