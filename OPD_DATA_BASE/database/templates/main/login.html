@@ -1,14 +1,21 @@
 {% extends 'main/base.html' %}
 
+{% load static %}
+
 {% block title %}
 Вход
 {% endblock %}
 
+{% block additional_head %}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}" type="text/css">
+{% endblock %}
+
 {% block content %}
-<form method="post" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data" class="form-login">
     {% csrf_token %}
     <img class="mb-4" src="/media/logo.png" alt=""
-         width="72" height="57">
+         width="60" height="60">
     <h1 class="h3 mb-3 fw-normal">Вход</h1>
     {{ form.as_p }}
     <button class="btn btn-primary w-100 py-2" type="submit" value="Save">

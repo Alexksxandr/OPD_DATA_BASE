@@ -1,9 +1,16 @@
 {% extends 'main/base.html' %}
 
+{% load static %}
+
 {% block title %}
 Главная
 {% endblock %}
 
+{% block additional_head %}
+    <link rel="stylesheet" href="{% static 'css/index.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}" type="text/css">
+{% endblock %}
+
 {% block content %}
-    <h1>Добро пожаловать на сайт электронной библиотеки!</h1>
+    <h1 class="header">Добро пожаловать на сайт электронной библиотеки!</h1>
 {% endblock %}

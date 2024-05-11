@@ -1,0 +1,35 @@
+.form-login p {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: start;
+    flex-direction: column;
+}
+
+p {
+    margin-left: 13px;
+    width: 30%;
+    height: 30px;
+    font-size: 16px;
+}
+
+p {
+    height: 50px;
+}
+
+.form-login .btn-primary {
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+p input[type="text"], p input[type="password"] {
+    margin-top: 20px;
+    width: 100%;
+}
+
+p {
+    margin-bottom: 60px !important;
+}
+
+h1 {
+    padding-bottom: 20px;
+}
