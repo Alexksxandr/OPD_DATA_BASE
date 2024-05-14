@@ -1,0 +1,31 @@
+{% extends 'main/base.html' %}
+
+{% load static %}
+
+{% block title %}
+Статья
+{% endblock %}
+
+{% block additional_head %}
+    <link rel="stylesheet" href="{% static 'css/base.css' %}" type="text/css">
+{% endblock %}
+
+{% block content %}
+{% if object.is_active and object.author.is_active %}
+<h1>{{ object.title }}</h1>
+<p>Аннотация: {{ object.abstract }}</p>
+<p>Ключевые слова: {{ object.keywords }}</p>
+<a href="/profile/{{ object.author.id }}">
+    <p>Автор: {{ object.author.fullname }}</p></a>
+<p>Количество просмотров: {{ object.views }}</p>
+<p>Количество загрузок: {{ object.downloads }}</p>
+<p>Дата публикации: {{ object.date_created|date }}</p>
+{% if user.is_authenticated %}
+<a href="/library/{{ object.id }}/download">
+    <button type="button" class="btn btn-primary">Скачать</button>
+</a>
+{% endif %}
+{% else %}
+<h1>Статья ещё не прошла модерацию или её владелец был заблокирован/удалил свой аккаунт</h1>
+{% endif %}
+{% endblock %}

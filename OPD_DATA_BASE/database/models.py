@@ -9,7 +9,7 @@ from django.contrib.auth.validators import UnicodeUsernameValidator
 
 
 def article_directory_path(instance, filename):
-    return "user_{0}/{1}/{2}".format(instance.author.id, instance.id, filename)
+    return "user_{0}/articles/{1}".format(instance.author.id, filename)
 
 
 def validate_pdf_file(file):
@@ -72,7 +72,7 @@ class Article(models.Model):
     date_created = models.DateTimeField('Дата создания', auto_now_add=True)
     views = models.PositiveIntegerField('Количество просмотров', default=0)
     downloads = models.PositiveIntegerField('Количество загрузок', default=0)
-    author = models.ForeignKey(Account, on_delete=models.CASCADE)
+    author = models.ForeignKey(Account, on_delete=models.DO_NOTHING)
     article = models.FileField('Статья', upload_to=article_directory_path,
                                validators=[validate_pdf_file])
     keywords = models.JSONField(
@@ -86,7 +86,7 @@ class Article(models.Model):
     #     self.keywords = ','.join(keyword_list)
     slug = models.SlugField(max_length=255, db_index=True, verbose_name="URL",
                             blank=True, editable=False)
-    is_active = models.BooleanField('Статус', default=True)
+    is_active = models.BooleanField('Статус', default=False)
 
     def __str__(self):
         return self.title

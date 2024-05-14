@@ -32,11 +32,11 @@
     <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
         <li><a href="/"
                class="nav-link px-2 {% if request.path == '/' %}link-secondary{% endif %}">Главная</a></li>
-        <li><a href="/catalog"
-               class="nav-link px-2 {% if request.path == '/catalog/' %}link-secondary{% endif %}">Электронная библиотека</a></li>
+        <li><a href="/library"
+               class="nav-link px-2 {% if request.path == '/library/' %}link-secondary{% endif %}">Электронная библиотека</a></li>
         {% if user.is_authenticated %}
-        <li><a href="/catalog/create"
-               class="nav-link px-2 {% if request.path == '/catalog/create/' %}link-secondary{% endif %}">Добавить статью</a></li>
+        <li><a href="/library/create"
+               class="nav-link px-2 {% if request.path == '/library/create/' %}link-secondary{% endif %}">Добавить статью</a></li>
         {% endif %}
     </ul>
 

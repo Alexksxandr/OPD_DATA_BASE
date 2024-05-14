@@ -1,0 +1,88 @@
+{% extends 'main/base.html' %}
+
+{% load static %}
+
+{% block style %}
+.btn .hover-text {
+display: none;
+}
+
+.btn:hover .original-text {
+display: none;
+}
+
+.btn:hover .hover-text {
+display: inline;
+}
+
+.d-block {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+{% endblock %}
+
+{% block title %}
+Библиотека
+{% endblock %}
+
+{% block additional_head %}
+    <link rel="stylesheet" href="{% static 'css/base.css' %}" type="text/css">
+{% endblock %}
+
+{% block content %}
+<h1>Библиотека</h1>
+
+<div class="album py-5 bg-body-tertiary">
+    <div class="container">
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            {% for article in article_list %}
+            {% if article.author.is_active %}
+            <div class="col">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <p class="card-text">{{ article.title }}</p>
+                        <div>
+                            <div class="d-block mb-2">
+                                <a href="/library/{{ article.id }}">
+                                <button type="button"
+                                        class="btn btn-sm btn-primary">
+                                    <span class="original-text">{{ article.downloads }}</span>
+                                    <span class="hover-text">Скачать</span>
+                                </button></a>
+                                {% if user.id == article.author.id %}
+                                <a href="/library/{{ article.id }}/update">
+                                <button type="button"
+                                        class="btn btn-sm btn-outline-secondary">
+                                    Редактировать
+                                </button></a>
+                                <a href="/library/{{ article.id }}/delete">
+                                <button type="button"
+                                        class="btn btn-sm btn-outline-secondary">
+                                    Удалить
+                                </button></a>
+                                {% endif %}
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <a href="/profile/{{ article.author.id }}">
+                                <small class="text-body-secondary">
+                                    {{ article.author.fullname }}</small></a>
+                                <small class="text-body-secondary" title="Количество просмотров">
+                                    {{ article.views }}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% empty %}
+            <h1>Пока здесь пусто...</h1>
+            {% endfor %}
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
