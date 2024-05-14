@@ -15,7 +15,7 @@
     left: 0;
     width: 100%;
     height: calc(100% - 8px);
-    background-image: url(../../media/background.jpg);
+    background-image: url(../media/background.jpg);
     background-size: cover;
     background-position: center;
     filter: blur(8px);

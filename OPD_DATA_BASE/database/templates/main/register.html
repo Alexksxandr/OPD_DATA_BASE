@@ -16,7 +16,7 @@
 
 <form method="post" enctype="multipart/form-data" class="form-signup">
     {% csrf_token %}
-    <img class="mb-4" src="/media/logo.png" alt="" width="60" height="60">
+    <img class="mb-4" src="{% static 'media/logo.png' %}" alt="" width="60" height="60">
     <h1 class="h3 mb-3 fw-normal">Регистрация</h1>
     {{ form.non_field_errors }}
     <div class="form-floating">
