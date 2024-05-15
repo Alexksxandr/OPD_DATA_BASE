@@ -46,19 +46,19 @@ display: inline;
                         <p class="card-text">{{ article.title }}</p>
                         <div>
                             <div class="d-block mb-2">
-                                <a href="/library/{{ article.id }}">
+                                <a href="/library/{{ article.slug }}">
                                 <button type="button"
                                         class="btn btn-sm btn-primary">
                                     <span class="original-text">{{ article.downloads }}</span>
                                     <span class="hover-text">Скачать</span>
                                 </button></a>
                                 {% if user.id == article.author.id %}
-                                <a href="/library/{{ article.id }}/update">
+                                <a href="/library/{{ article.slug }}/update">
                                 <button type="button"
                                         class="btn btn-sm btn-outline-secondary">
                                     Редактировать
                                 </button></a>
-                                <a href="/library/{{ article.id }}/delete">
+                                <a href="/library/{{ article.slug }}/delete">
                                 <button type="button"
                                         class="btn btn-sm btn-outline-secondary">
                                     Удалить
@@ -84,5 +84,21 @@ display: inline;
         </div>
     </div>
 </div>
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; первая</a>
+            <a href="?page={{ page_obj.previous_page_number }}">предыдущая</a>
+        {% endif %}
 
+        <span class="current">
+            Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">следующая</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">последняя &raquo;</a>
+        {% endif %}
+    </span>
+</div>
 {% endblock %}

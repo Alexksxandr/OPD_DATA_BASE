@@ -9,10 +9,14 @@ urlpatterns = [
     path('library/', views.LibraryView.as_view(), name='library'),
     path('library/create/', views.CreateArticleView.as_view(),
          name='create_article'),
-    path('library/<pk>/delete/', views.DeleteArticleView.as_view(),
+    path('library/<slug:slug>/delete/', views.DeleteArticleView.as_view(),
          name='delete_article'),
-    path('library/<pk>/update/', views.UpdateArticleView.as_view(),
+    path('library/<slug:slug>/update/', views.UpdateArticleView.as_view(),
          name='update_article'),
-    path('library/<pk>/', views.ArticleView.as_view(), name='article')
+    path('library/<slug:slug>/', views.ArticleView.as_view(), name='article'),
+    path('profile/<pk>/', views.ProfileView.as_view(), name='profile'),
+    path('profile/<pk>/update/', views.UpdateAccountView.as_view(),
+         name='update_account'),
+    path('library/<slug:slug>/download/', views.DownloadView.as_view(),
+         name='download')
     ]
-

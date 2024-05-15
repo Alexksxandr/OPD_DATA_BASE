@@ -66,33 +66,34 @@ exists."),
         verbose_name_plural = 'Аккаунты'
 
 
+class Keyword(models.Model):
+    word = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.word
+
+
 class Article(models.Model):
     title = models.CharField('Название статьи', max_length=128)
-    abstract = models.TextField('Аннотация к статье', null=True)
+    abstract = models.TextField('Аннотация к статье')
     date_created = models.DateTimeField('Дата создания', auto_now_add=True)
     views = models.PositiveIntegerField('Количество просмотров', default=0)
     downloads = models.PositiveIntegerField('Количество загрузок', default=0)
-    author = models.ForeignKey(Account, on_delete=models.DO_NOTHING)
+    author = models.ForeignKey(Account, on_delete=models.DO_NOTHING,
+                               related_name='articles')
     article = models.FileField('Статья', upload_to=article_directory_path,
                                validators=[validate_pdf_file])
-    keywords = models.JSONField(
-        default=list, null=True,
-        blank=True)
-    # если вдруг траблы, то юзать нижнее
-    # keywords = models.TextField(default='')
-    # def get_keyword_list(self):
-    #     return self.keywords.split(',')
-    # def set_keyword_list(self, keyword_list):
-    #     self.keywords = ','.join(keyword_list)
-    slug = models.SlugField(max_length=255, db_index=True, verbose_name="URL",
-                            blank=True, editable=False)
+    keywords = models.ManyToManyField(Keyword, related_name='articles')
+    keywords_temp = models.CharField('Ключевые слова', max_length=255)
+    slug = models.SlugField(max_length=255, verbose_name="URL", editable=False,
+                            unique=True)
     is_active = models.BooleanField('Статус', default=False)
 
     def __str__(self):
         return self.title
 
     def save(self, *args, **kwargs):
-        if self.slug == '':
+        if not self.slug:
             self.slug = slugify(
                 f'{self.title}-b\
 y-{self.author.fullname}--{uuid4().hex[:4]}')

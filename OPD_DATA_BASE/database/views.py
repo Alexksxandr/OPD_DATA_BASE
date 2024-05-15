@@ -1,10 +1,14 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import CreateView, ListView, DeleteView, \
-    UpdateView, DetailView
+    UpdateView, DetailView, View
 from django.contrib.auth.views import LoginView, LogoutView
-from django.http import HttpResponseRedirect
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseRedirect, FileResponse, Http404
 from django.urls import reverse_lazy
+from django.core.exceptions import PermissionDenied
 from .models import *
+
+
 # Create your views here.
 
 
@@ -29,18 +33,21 @@ class AccountLoginView(LoginView):
     template_name = 'main/login.html'
 
 
-class AccountLogoutView(LogoutView):
+class AccountLogoutView(LoginRequiredMixin, LogoutView):
     pass
 
 
 class LibraryView(ListView):
     template_name = 'main/elibrary.html'
+    paginate_by = 10
 
     def get_queryset(self):
-        return Article.objects.filter(is_active=True)
+        return Article.objects.filter(is_active=True,
+                                      author__is_active=True).order_by(
+            '-date_created')
 
 
-class DeleteArticleView(DeleteView):
+class DeleteArticleView(LoginRequiredMixin, DeleteView):
     model = Article
     success_url = reverse_lazy('library')
     template_name = 'main/delete_article.html'
@@ -48,21 +55,28 @@ class DeleteArticleView(DeleteView):
     def form_valid(self, form):
         if self.object.author.id == self.request.user.id:
             return super().form_valid(form)
-        return HttpResponseRedirect(self.get_success_url())
+        raise PermissionDenied("У вас нет прав для удаления данной статьи.")
 
 
-class CreateArticleView(CreateView):
+class CreateArticleView(LoginRequiredMixin, CreateView):
     model = Article
-    fields = ['title', 'abstract', 'article', 'keywords']
+    fields = ['title', 'abstract', 'article', 'keywords_temp']
     template_name = 'main/create_article.html'
     success_url = reverse_lazy('library')
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        return super().form_valid(form)
+        response = super().form_valid(form)
+        keywords = form.cleaned_data.get('keywords_temp', '').split(',')
+        for word in keywords:
+            word = word.strip()
+            if word:
+                keyword, created = Keyword.objects.get_or_create(word=word)
+                self.object.keywords.add(keyword)
+        return response
 
 
-class UpdateArticleView(UpdateView):
+class UpdateArticleView(LoginRequiredMixin, UpdateView):
     model = Article
     fields = []
     template_name = 'main/update_article.html'
@@ -70,10 +84,64 @@ class UpdateArticleView(UpdateView):
 
     def form_valid(self, form):
         if form.instance.author.id == self.request.user.id:
+            form.instance.is_active = False
             return super().form_valid(form)
-        return HttpResponseRedirect(self.get_success_url())
+        raise PermissionDenied(
+            "У вас нет прав для редактирования данной статьи.")
 
 
-class ArticleView(DetailView):
+class ArticleView(LoginRequiredMixin, DetailView):
     model = Article
     template_name = 'main/article.html'
+
+    def get_object(self, queryset=None):
+        queryset = self.get_queryset()
+        article = super().get_object(queryset=queryset)
+        if not article.is_active or not article.author.is_active:
+            raise Http404("Статья не найдена или ещё не проверена модерацией.")
+        return article
+
+
+class ProfileView(LoginRequiredMixin, DetailView):
+    model = Account
+    template_name = 'main/profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        articles = context['object'].articles.all()
+        articles = articles.filter(is_active=True) | articles.filter(
+            author=user)
+        context['articles'] = articles
+        return context
+
+    def get(self, request, *args, **kwargs):
+        author = self.get_object()
+        if not author.is_active:
+            return redirect('library')
+        return super().get(request, *args, **kwargs)
+
+
+class UpdateAccountView(LoginRequiredMixin, UpdateView):
+    model = Account
+    fields = ['first_name', 'last_name', 'third_name']
+    template_name = 'main/update_account.html'
+
+    def get_success_url(self):
+        return reverse_lazy('profile', kwargs={'pk': self.object.pk})
+
+    def form_valid(self, form):
+        if form.instance.id == self.request.user.id:
+            return super().form_valid(form)
+        raise PermissionDenied(
+            "У вас нет прав для редактирования этого профиля.")
+
+
+class DownloadView(LoginRequiredMixin, View):
+
+    def get(self, request, *args, **kwargs):
+        article = get_object_or_404(Article, slug=kwargs['slug'])
+        file = article.article
+        response = FileResponse(file.open(), as_attachment=True,
+                                filename=file.name)
+        return response
