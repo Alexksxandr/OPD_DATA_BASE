@@ -15,6 +15,30 @@
 
 }
 
+@media (max-width: 767.98px) {
+    .form-signup .form-floating input[type="text"],
+    .form-signup .form-floating input[type="email"],
+    .form-signup .form-floating input[type="password"] {
+        width: 96%;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .form-signup .form-floating input[type="text"],
+    .form-signup .form-floating input[type="email"],
+    .form-signup .form-floating input[type="password"] {
+        width: 45%;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .form-signup .form-floating input[type="text"],
+    .form-signup .form-floating input[type="email"],
+    .form-signup .form-floating input[type="password"] {
+        width: 60%;
+    }
+}
+
 .form-floating {
     height: 50px;
 }

@@ -2,26 +2,6 @@
 
 {% load static %}
 
-{% block style %}
-.btn .hover-text {
-display: none;
-}
-
-.btn:hover .original-text {
-display: none;
-}
-
-.btn:hover .hover-text {
-display: inline;
-}
-
-.d-block {
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-}
-
-{% endblock %}
 
 {% block title %}
 Библиотека
@@ -29,13 +9,14 @@ display: inline;
 
 {% block additional_head %}
     <link rel="stylesheet" href="{% static 'css/base.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/elibrary.css' %}" type="text/css"
 {% endblock %}
 
 {% block content %}
-<h1>Библиотека</h1>
+<h1 class="page-title">Библиотека</h1>
 
-<div class="album py-5 bg-body-tertiary">
-    <div class="container">
+<div class="album py-5">
+    <div class="container elibrary_container">
 
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
             {% for article in article_list %}

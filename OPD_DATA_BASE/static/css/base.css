@@ -32,6 +32,19 @@
     justify-content: end;
 }
 
+@media (max-width: 300px) {
+    .head-button {
+        display: flex;
+        flex-direction: column;
+        justify-content: end;
+        align-items: center;
+        text-align: center;
+    }
+    .logout_form, .btn {
+        margin-bottom: 10px;
+    }
+}
+
 #exit-btn {
     margin-right: 12px;
 }

@@ -8,10 +8,11 @@
 
 {% block additional_head %}
     <link rel="stylesheet" href="{% static 'css/base.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/create_article.css' %}" type="text/css">
 {% endblock %}
 
 {% block content %}
-<form method="post" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data" class="form-article">
     {% csrf_token %}
     <img class="mb-4" src="{% static 'media/logo.png' %}" alt=""
          width="60" height="60">

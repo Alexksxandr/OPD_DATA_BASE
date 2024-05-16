@@ -29,7 +29,7 @@
         </a>
     </div>
 
-    <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+    <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0 head-button">
         <li><a href="/"
                class="nav-link px-2 {% if request.path == '/' %}link-secondary{% endif %}">Главная</a></li>
         <li><a href="/library"
@@ -40,9 +40,9 @@
         {% endif %}
     </ul>
 
-    <div class="col-md-3 text-end head-button">
+    <div class="col-md-12 col-xl-3 text-end head-button">
         {% if user.is_authenticated %}
-        <form action="/logout/" method="post">
+        <form action="/logout/" method="post" class="logout_form">
             {% csrf_token %}
             <input type="submit" class="btn btn-primary" value="Выход из аккаунта" id="exit-btn">
         </form>
