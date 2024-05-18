@@ -2,40 +2,20 @@
 
 {% load static %}
 
-{% block style %}
-.btn .hover-text {
-display: none;
-}
-
-.btn:hover .original-text {
-display: none;
-}
-
-.btn:hover .hover-text {
-display: inline;
-}
-
-.d-block {
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-}
-
-{% endblock %}
-
 {% block title %}
 Профиль
 {% endblock %}
 
 {% block additional_head %}
     <link rel="stylesheet" href="{% static 'css/base.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}" type="text/css">
 {% endblock %}
 
 {% block content %}
 {% if object.is_active %}
-<h1>{{ object.fullname }}</h1>
-<p>Почта: {{ object.email }}</p>
-<p>Права:
+<h1 class="info">{{ object.fullname }}</h1>
+<p class="info">Почта: {{ object.email }}</p>
+<p class="info">Права:
 {% if object.role == 1 %}
     Читатель
   {% elif object.role == 2 %}
@@ -44,14 +24,14 @@ display: inline;
     Админ
   {% endif %}
 </p>
-<p>Дата регистрации: {{ object.date_joined|date }}</p>
+<p class="info">Дата регистрации: {{ object.date_joined|date }}</p>
 {% if object.id == user.id %}
 <a href="/profile/{{ object.id }}/update">
-    <button type="button" class="btn btn-primary">Редактировать аккаунт</button></a>
+    <button type="button" class="btn btn-primary button-redacc">Редактировать аккаунт</button></a>
 {% endif %}
 
-<div class="album py-5 bg-body-tertiary">
-    <div class="container">
+<div class="album py-5 profile-article">
+    <div class="container container-profile">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
             {% for article in articles %}
             {% if article.is_active or article.author.id == user.id %}
@@ -62,31 +42,31 @@ display: inline;
                         <div>
                             <div class="d-block mb-2">
                                 <a href="/library/{{ article.slug }}">
-                                    <button type="button"
-                                            class="btn btn-sm btn-primary">
-                                        <span class="original-text">{{ article.downloads }}</span>
-                                        <span class="hover-text">Скачать</span>
-                                    </button></a>
+                                <button type="button"
+                                        class="btn btn-sm btn-primary">
+                                    <span>Скачать</span>
+                                </button></a>
                                 {% if user.id == article.author.id %}
                                 <a href="/library/{{ article.slug }}/update">
-                                    <button type="button"
-                                            class="btn btn-sm btn-outline-secondary">
-                                        Редактировать
-                                    </button></a>
+                                <button type="button"
+                                        class="btn btn-sm btn-outline-secondary">
+                                    Редактировать
+                                </button></a>
                                 <a href="/library/{{ article.slug }}/delete">
-                                    <button type="button"
-                                            class="btn btn-sm btn-outline-secondary">
-                                        Удалить
-                                    </button></a>
+                                <button type="button"
+                                        class="btn btn-sm btn-outline-secondary">
+                                    Удалить
+                                </button></a>
                                 {% endif %}
                             </div>
                             <div class="d-flex justify-content-between align-items-center mt-2">
                                 <a href="/profile/{{ article.author.id }}">
-                                    <small class="text-body-secondary">
-                                        {{ article.author.fullname }}</small></a>
-                                <small class="text-body-secondary"
-                                       title="Количество просмотров">
-                                    {{ article.views }}</small>
+                                <small class="text-body-secondary">
+                                    {{ article.author.fullname }}</small></a>
+                                <small class="text-body-secondary" title="Количество скачиваний">
+                                    Cкачиваний: {{ article.downloads }}</small>
+                                <small class="text-body-secondary" title="Количество просмотров">
+                                    Просмотров: {{ article.views }}</small>
                             </div>
                         </div>
                     </div>

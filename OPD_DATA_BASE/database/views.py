@@ -41,7 +41,7 @@ class AccountLogoutView(LoginRequiredMixin, LogoutView):
 
 class LibraryView(ListView):
     template_name = 'main/elibrary.html'
-    paginate_by = 9
+    paginate_by = 30
 
     def get_queryset(self):
         query = self.request.GET.get('query')

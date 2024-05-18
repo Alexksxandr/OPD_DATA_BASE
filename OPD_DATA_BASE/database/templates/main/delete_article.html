@@ -2,6 +2,8 @@
 
 {% load static %}
 
+
+
 {% block title %}
 Удаление статьи
 {% endblock %}
@@ -12,13 +14,26 @@
 
 {% block content %}
 {% if user.id == object.author.id %}
+
+<style>
+    .delete-page {
+        text-align: center;
+        margin-top: 30px;
+    }
+    .delete-button {
+        margin-left: 15px;
+    }
+</style>
+
 <form method="post">{% csrf_token %}
-    <p>Вы действительно хотите удалить статью "{{ object }}"?</p>
+    <p class="delete-page">Вы действительно хотите удалить статью "{{ object }}"?</p>
     {{ form }}
-    <input type="submit" value="Подтвердить">
-    <a href="/library">
+    <div class="delete-page">
+        <input type="submit" value="Подтвердить">
+    <a href="/library" class="delete-button">
         <input type="button" value="Отмена">
     </a>
+    </div>
 </form>
 {% else %}
 <h1>Статью может удалять только её авторизированный владелец или админ!</h1>

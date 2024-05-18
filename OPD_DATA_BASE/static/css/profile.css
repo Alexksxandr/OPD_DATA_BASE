@@ -1,0 +1,29 @@
+.btn .hover-text {
+display: none;
+}
+
+.btn:hover .original-text {
+display: none;
+}
+
+.btn:hover .hover-text {
+display: inline;
+}
+
+.d-block {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.info, .button-redacc {
+    margin: 20px 0 0 15px;
+}
+
+.container-profile {
+    background-color: rgb(0, 0, 0, 0);
+}
+
+.profile-article {
+    margin-top: -28px !important;
+}

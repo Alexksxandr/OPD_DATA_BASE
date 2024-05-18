@@ -15,13 +15,16 @@
 {% block content %}
 <h1 class="page-title">Библиотека</h1>
 
-<p>
+<p class="page-title">
     Искать статьи можно по названию, аннотации, ключевым словам, дате загрузки и автору.
     Если вы планируете искать сразу по нескольким параметрам или по нескольким ключевым словам, то используйте запятые для разделения.
 </p>
 
-<form method="GET" action="{% url 'library' %}">
-    <input type="text" name="query" placeholder="Поиск..." value="{{ request.GET.query }}">
+<form method="GET" action="{% url 'library' %}" class="page-title search-form">
+    <input type="text" name="query" placeholder="Поиск..." value="{{ request.GET.query }}" class="search-line">
+    <div id="keywords_input" style="display: {% if request.GET.keywords_block %}block{% else %}none{% endif %};">
+        <input type="text" name="keywords" placeholder="Ключевые слова через запятую" value="{{ request.GET.keywords }}">
+    </div>
     <label>
         <input type="checkbox" id="keywords_checkbox" name="keywords_block" {% if request.GET.keywords_block %}checked{% endif %}>
         Обязательные ключевые слова
@@ -30,9 +33,6 @@
         <input type="checkbox" name="all_terms" {% if request.GET.all_terms %}checked{% endif %}>
         Более точный запрос
     </label>
-    <div id="keywords_input" style="display: {% if request.GET.keywords_block %}block{% else %}none{% endif %};">
-        <input type="text" name="keywords" placeholder="Ключевые слова через запятую" value="{{ request.GET.keywords }}">
-    </div>
     <button type="submit">Поиск</button>
 </form>
 
@@ -62,8 +62,7 @@
                                 <a href="/library/{{ article.slug }}">
                                 <button type="button"
                                         class="btn btn-sm btn-primary">
-                                    <span class="original-text">{{ article.downloads }}</span>
-                                    <span class="hover-text">Скачать</span>
+                                    <span>Скачать</span>
                                 </button></a>
                                 {% if user.id == article.author.id %}
                                 <a href="/library/{{ article.slug }}/update">
@@ -82,8 +81,10 @@
                                 <a href="/profile/{{ article.author.id }}">
                                 <small class="text-body-secondary">
                                     {{ article.author.fullname }}</small></a>
+                                <small class="text-body-secondary" title="Количество скачиваний">
+                                    Cкачиваний: {{ article.downloads }}</small>
                                 <small class="text-body-secondary" title="Количество просмотров">
-                                    {{ article.views }}</small>
+                                    Просмотров: {{ article.views }}</small>
                             </div>
                         </div>
                     </div>
@@ -105,7 +106,7 @@
         {% endif %}
 
         <span class="current">
-            Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}.
+            Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
         </span>
 
         {% if page_obj.has_next %}
@@ -114,4 +115,6 @@
         {% endif %}
     </span>
 </div>
+
+
 {% endblock %}

@@ -3,23 +3,74 @@
 }
 
 .page-title {
-    padding: 30px 0 0 10px;
+    text-align: center;
+    padding: 30px 0 0 0;
 }
 
 .btn .hover-text {
-display: none;
+    display: none;
 }
 
 .btn:hover .original-text {
-display: none;
+    display: none;
 }
 
 .btn:hover .hover-text {
-display: inline;
+    display: inline;
 }
 
 .d-block {
     width: 100%;
     display: flex;
     flex-wrap: wrap;
+}
+
+.search-form {
+    display: flex;
+    align-items: start;
+    justify-content: center;
+    flex-direction: column;
+    margin-left: 15px;
+}
+
+.search-form label, .search-form button, #keywords_input {
+    margin-top: 15px;
+}
+
+.search-line, #keywords_input {
+    width: 30%;
+}
+
+#keywords_input input {
+    width: 100%;
+}
+
+.step-links a {
+    text-decoration: none;
+    color: var(--bs-body-color);
+    margin: 0 5px;
+}
+
+.pagination {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+}
+
+.step-links {
+    margin-bottom: 20px;
+}
+
+.step-links a:hover {
+    text-decoration: none;
+    color: white;
+}
+
+.album {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.current {
+    color: ;
 }

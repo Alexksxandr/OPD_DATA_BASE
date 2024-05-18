@@ -5,7 +5,13 @@
 
 .body {
     position: relative;
-    height: 100vh;
+    display: flex;
+    min-height: 100vh;
+}
+
+.container {
+    flex: 1;
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 .body::before {
@@ -22,10 +28,6 @@
     z-index: -1;
 }
 
-.container {
-    height: inherit;
-    background-color: rgba(0, 0, 0, 0.5);
-}
 
 .head-button {
     display: flex;
@@ -47,4 +49,14 @@
 
 #exit-btn {
     margin-right: 12px;
+}
+
+.card {
+    min-height: 185px;
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
