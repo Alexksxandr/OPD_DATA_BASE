@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import FileResponse, Http404
 from django.urls import reverse_lazy
 from django.core.exceptions import PermissionDenied
-from django.db.models import Q, F
+from django.db.models import Q, F, Subquery, OuterRef, Count
 from datetime import datetime
 from .models import *
 
@@ -45,6 +45,9 @@ class LibraryView(ListView):
 
     def get_queryset(self):
         query = self.request.GET.get('query')
+        keywords = self.request.GET.get('keywords')
+        keywords_block = self.request.GET.get('keywords_block')
+        all_terms = self.request.GET.get('all_terms')
         queryset = Article.objects.filter(is_active=True,
                                           author__is_active=True).order_by(
             '-date_created')
@@ -52,40 +55,53 @@ class LibraryView(ListView):
             search_terms = [term.strip() for term in query.split(',')]
             q_objects = Q()
             for term in search_terms:
+                q_objects_temp = Q()
                 date_term = None
                 for fmt in (
                         "%d.%m.%Y", "%d.%m.%y", "%m.%d.%Y", "%m.%d.%y"):
                     try:
                         date_term = datetime.strptime(term, fmt).date()
-                        q_objects |= Q(date_created__date=date_term)
+                        q_objects_temp |= Q(date_created__date=date_term)
+                        break
                     except ValueError:
                         pass
                 if not date_term:
                     try:
                         day = int(term)
-                        q_objects |= Q(date_created__day=day)
+                        q_objects_temp |= Q(date_created__day=day)
                     except ValueError:
                         pass
-
                     try:
                         month = int(term)
-                        q_objects |= Q(date_created__month=month)
+                        q_objects_temp |= Q(date_created__month=month)
                     except ValueError:
                         pass
-
                     try:
                         year = int(term)
-                        q_objects |= Q(date_created__year=year)
+                        q_objects_temp |= Q(date_created__year=year)
                     except ValueError:
                         pass
-                q_objects |= (
-                        Q(title__iregex=term) |
-                        Q(abstract__iregex=term) |
-                        Q(author__fullname__iregex=term) |
-                        Q(keywords__word__iregex=term)
-                )
-
+                    q_objects_temp |= (
+                            Q(title__iregex=term) |
+                            Q(abstract__iregex=term) |
+                            Q(author__fullname__iregex=term) |
+                            Q(keywords__word__iregex=term)
+                    )
+                if all_terms:
+                    q_objects &= q_objects_temp
+                else:
+                    q_objects |= q_objects_temp
             queryset = queryset.filter(q_objects).distinct()
+        if keywords_block:
+            keywords = [word.upper().strip() for word in keywords.split(',')]
+            article_keywords = Article.objects.filter(
+                pk=OuterRef('pk'),
+                keywords__word__in=keywords).values(
+                'pk').annotate(num_keywords=Count('keywords')).values(
+                'num_keywords')
+            queryset = queryset.annotate(
+                num_keywords=Subquery(article_keywords)
+            ).filter(num_keywords=len(keywords))
         return queryset
 
 
@@ -111,7 +127,7 @@ class CreateArticleView(LoginRequiredMixin, CreateView):
         response = super().form_valid(form)
         keywords = form.cleaned_data.get('keywords_temp', '').split(',')
         for word in keywords:
-            word = word.strip()
+            word = word.upper().strip()
             if word:
                 keyword, created = Keyword.objects.get_or_create(word=word)
                 self.object.keywords.add(keyword)

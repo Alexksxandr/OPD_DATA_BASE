@@ -22,8 +22,30 @@
 
 <form method="GET" action="{% url 'library' %}">
     <input type="text" name="query" placeholder="Поиск..." value="{{ request.GET.query }}">
+    <label>
+        <input type="checkbox" id="keywords_checkbox" name="keywords_block" {% if request.GET.keywords_block %}checked{% endif %}>
+        Обязательные ключевые слова
+    </label>
+    <label>
+        <input type="checkbox" name="all_terms" {% if request.GET.all_terms %}checked{% endif %}>
+        Более точный запрос
+    </label>
+    <div id="keywords_input" style="display: {% if request.GET.keywords_block %}block{% else %}none{% endif %};">
+        <input type="text" name="keywords" placeholder="Ключевые слова через запятую" value="{{ request.GET.keywords }}">
+    </div>
     <button type="submit">Поиск</button>
 </form>
+
+<script>
+    document.getElementById('keywords_checkbox').addEventListener('change', function() {
+        var keywordsInput = document.getElementById('keywords_input');
+        if (this.checked) {
+            keywordsInput.style.display = 'block';
+        } else {
+            keywordsInput.style.display = 'none';
+        }
+    });
+</script>
 
 <div class="album py-5">
     <div class="container elibrary_container">
