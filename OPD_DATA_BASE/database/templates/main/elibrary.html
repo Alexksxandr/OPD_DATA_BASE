@@ -15,6 +15,16 @@
 {% block content %}
 <h1 class="page-title">Библиотека</h1>
 
+<p>
+    Искать статьи можно по названию, аннотации, ключевым словам, дате загрузки и автору.
+    Если вы планируете искать сразу по нескольким параметрам или по нескольким ключевым словам, то используйте запятые для разделения.
+</p>
+
+<form method="GET" action="{% url 'library' %}">
+    <input type="text" name="query" placeholder="Поиск..." value="{{ request.GET.query }}">
+    <button type="submit">Поиск</button>
+</form>
+
 <div class="album py-5">
     <div class="container elibrary_container">
 

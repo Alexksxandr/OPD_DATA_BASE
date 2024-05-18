@@ -53,7 +53,7 @@ exists."),
     REQUIRED_FIELDS = []
 
     def __str__(self):
-        return self.username
+        return self.fullname
 
     def save(self, *args, **kwargs):
         self.fullname = f"{self.last_name} {self.first_name} \
@@ -72,6 +72,10 @@ class Keyword(models.Model):
     def __str__(self):
         return self.word
 
+    class Meta:
+        verbose_name = 'Ключевое слово'
+        verbose_name_plural = 'Ключевые слова'
+
 
 class Article(models.Model):
     title = models.CharField('Название статьи', max_length=128)
@@ -80,14 +84,14 @@ class Article(models.Model):
     views = models.PositiveIntegerField('Количество просмотров', default=0)
     downloads = models.PositiveIntegerField('Количество загрузок', default=0)
     author = models.ForeignKey(Account, on_delete=models.DO_NOTHING,
-                               related_name='articles')
+                               related_name='articles', verbose_name='Автор')
     article = models.FileField('Статья', upload_to=article_directory_path,
                                validators=[validate_pdf_file])
     keywords = models.ManyToManyField(Keyword, related_name='articles')
     keywords_temp = models.CharField('Ключевые слова', max_length=255)
     slug = models.SlugField(max_length=255, verbose_name="URL", editable=False,
                             unique=True)
-    is_active = models.BooleanField('Статус', default=False)
+    is_active = models.BooleanField('Одобрено', default=False)
 
     def __str__(self):
         return self.title

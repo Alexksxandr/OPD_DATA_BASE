@@ -17,7 +17,9 @@
 <p>Ключевые слова:</p>
 <ul>
     {% for keyword in object.keywords.all %}
-        <li>{{ keyword.word }}</li>
+        <li>
+            <a href="{% url 'library' %}?query={{ keyword.word }}">{{ keyword.word }}</a>
+        </li>
     {% endfor %}
 </ul>
 <a href="/profile/{{ object.author.id }}">
