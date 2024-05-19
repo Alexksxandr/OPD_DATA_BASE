@@ -123,15 +123,17 @@ class CreateArticleView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('library')
 
     def form_valid(self, form):
-        form.instance.author = self.request.user
-        response = super().form_valid(form)
-        keywords = form.cleaned_data.get('keywords_temp', '').split(',')
-        for word in keywords:
-            word = word.upper().strip()
-            if word:
-                keyword, created = Keyword.objects.get_or_create(word=word)
-                self.object.keywords.add(keyword)
-        return response
+        if self.request.user.role == 2:
+            form.instance.author = self.request.user
+            response = super().form_valid(form)
+            keywords = form.cleaned_data.get('keywords_temp', '').split(',')
+            for word in keywords:
+                word = word.upper().strip()
+                if word:
+                    keyword, created = Keyword.objects.get_or_create(word=word)
+                    self.object.keywords.add(keyword)
+            return response
+        raise PermissionDenied("У вас нет прав для загрузки статьи.")
 
 
 class UpdateArticleView(LoginRequiredMixin, UpdateView):
