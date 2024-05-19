@@ -34,7 +34,7 @@
                class="nav-link px-2 {% if request.path == '/' %}link-secondary{% endif %}">Главная</a></li>
         <li><a href="/library"
                class="nav-link px-2 {% if request.path == '/library/' %}link-secondary{% endif %}">Электронная библиотека</a></li>
-        {% if user.is_authenticated and user.role == 2 %}
+        {% if user.is_authenticated and user.role == 2 or user.role == 3 %}
         <li><a href="/library/create"
                class="nav-link px-2 {% if request.path == '/library/create/' %}link-secondary{% endif %}">Добавить статью</a></li>
         {% endif %}

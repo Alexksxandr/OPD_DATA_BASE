@@ -16,7 +16,7 @@
     {% csrf_token %}
     <img class="mb-4" src="{% static 'media/logo.png' %}" alt=""
          width="60" height="60">
-    {% if user.id == object.id %}
+    {% if user.id == object.id or user.role == 3 %}
     <h1 class="h3 mb-3 fw-normal">Редактирование аккаунта</h1>
     {{ form.as_p }}
     <button class="btn btn-primary w-100 py-2" type="submit" value="Save">

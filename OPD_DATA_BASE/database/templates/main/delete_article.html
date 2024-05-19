@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block content %}
-{% if user.id == object.author.id %}
+{% if user.id == object.author.id or user.role == 3 %}
 
 <style>
     .delete-page {

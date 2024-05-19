@@ -111,7 +111,8 @@ class DeleteArticleView(LoginRequiredMixin, DeleteView):
     template_name = 'main/delete_article.html'
 
     def form_valid(self, form):
-        if self.object.author.id == self.request.user.id:
+        if (self.object.author.id == self.request.user.id or
+                self.request.user.role == 3):
             return super().form_valid(form)
         raise PermissionDenied("У вас нет прав для удаления данной статьи.")
 
@@ -123,7 +124,7 @@ class CreateArticleView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('library')
 
     def form_valid(self, form):
-        if self.request.user.role == 2:
+        if self.request.user.role >= 2:
             form.instance.author = self.request.user
             response = super().form_valid(form)
             keywords = form.cleaned_data.get('keywords_temp', '').split(',')
@@ -143,7 +144,8 @@ class UpdateArticleView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('library')
 
     def form_valid(self, form):
-        if form.instance.author.id == self.request.user.id:
+        if (form.instance.author.id == self.request.user.id or
+                self.request.user.role == 3):
             form.instance.is_active = False
             return super().form_valid(form)
         raise PermissionDenied(
@@ -198,7 +200,8 @@ class UpdateAccountView(LoginRequiredMixin, UpdateView):
         return reverse_lazy('profile', kwargs={'pk': self.object.pk})
 
     def form_valid(self, form):
-        if form.instance.id == self.request.user.id:
+        if (form.instance.id == self.request.user.id or
+                self.request.user.role == 3):
             return super().form_valid(form)
         raise PermissionDenied(
             "У вас нет прав для редактирования этого профиля.")
