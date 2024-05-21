@@ -19,6 +19,7 @@
     {% if user.is_authenticated and user.role == 2 or user.role == 3 %}
     <h1 class="h3 mb-3 fw-normal">Добавление статьи</h1>
     {{ form.as_p }}
+    <div class="keytext">Ключевые слова записываются через запятую. Пример: ключевое слово 1, ключевое слово 2, ключевое слово 3</div>
     <button class="btn btn-primary w-100 py-2" type="submit" value="Save">
         Добавить статью
     </button>

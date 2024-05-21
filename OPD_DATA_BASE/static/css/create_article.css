@@ -63,3 +63,11 @@ p input[type="text"], p input[type="password"], #id_article {
 h1 {
     padding-bottom: 20px;
 }
+
+.keytext {
+    margin: 0 0 15px 15px;
+}
+
+.form-article p {
+    height: 30px;
+}

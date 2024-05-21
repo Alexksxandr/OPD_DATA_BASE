@@ -41,11 +41,14 @@
                         <p class="card-text">{{ article.title }}</p>
                         <div>
                             <div class="d-block mb-2">
-                                <a href="/library/{{ article.slug }}">
-                                <button type="button"
-                                        class="btn btn-sm btn-primary">
-                                    <span>Скачать</span>
-                                </button></a>
+                                <div class="date_and_download menu-table">
+                                   <a href="/library/{{ article.slug }}">
+                                        <button type="button"
+                                                class="btn btn-sm btn-primary">
+                                            <span>Скачать</span>
+                                        </button></a>
+                                    <p class="content">Дата публикации: {{ article.date_created|date }}</p>
+                                </div>
                                 {% if user.id == article.author.id or user.role == 3 %}
                                 <a href="/library/{{ article.slug }}/update">
                                 <button type="button"
@@ -59,7 +62,7 @@
                                 </button></a>
                                 {% endif %}
                             </div>
-                            <div class="d-flex justify-content-between align-items-center mt-2">
+                            <div class="d-flex justify-content-between align-items-center mt-2 menu-table">
                                 <a href="/profile/{{ article.author.id }}">
                                 <small class="text-body-secondary">
                                     {{ article.author.fullname }}</small></a>
